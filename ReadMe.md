@@ -6,7 +6,7 @@ My name is [Joe Borri](https://github.com/jborri/), a Graduate Student at CUNY G
     - I am currently reading *The Belly of Paris* by Émile Zola
     - ![Cover of 'The Belly of Paris'](BoP.jpeg)
 - Drawing and painting
-    - My favorite **mediums** to work in are: *watercolors*, *charcoal*, *graphite*, and *acrylics*
+    - My favorite **media** to work in are: *watercolors*, *charcoal*, *graphite*, and *acrylics*
     - ![Graphite drawing of mine. Portait of half-skeleton/half-human with hand covering the human side of the face](Drawing.jpeg)
 - Biochemistry
     - Particularly biochemical pathways related to protein synthesis and gene editing.
