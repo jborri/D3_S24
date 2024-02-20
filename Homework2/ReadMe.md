@@ -1,0 +1,1 @@
+In **Homework 2** I will be creating a visualizing data in the form of a *scatterplot*. The data being visualized has already been provided by the instructor.
