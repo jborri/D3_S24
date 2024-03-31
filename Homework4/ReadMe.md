@@ -1,1 +1,1 @@
-In **Homework** 4 I will be creating an interactive data update.
+In **Homework** 4 I will be updating the previous temperature chart and introducing *interactive* buttons to select a particular aspect of the data, in our case, the maximum, average and minimum temperatures.
