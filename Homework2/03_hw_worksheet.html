@@ -37,7 +37,8 @@
              const svg = d3.select("body")
                 .append("svg")
                 .attr("width", svgWidth) 
-                .attr("height", svgHeight); //Hint: don't delete this ending ;
+                .attr("height", svgHeight)
+                //.attr("transform", "translate(0, " + (svgHeight) + " )"); //Hint: don't delete this ending ;
 
 
             
@@ -54,7 +55,7 @@
                 .append("circle")
                 //.text(function(d) {return d;})
                 .attr("cx", function (d) { return (d[0]); }) //(a required circle value, and a function of what it returns)  // Hint: we want to return d[] with the x value of the array
-                .attr("cy", function (d) { return (d[1]); }) //(a required circle value, and a function of what it returns)  // Hint: we want to return d[] with the y value of the array 
+                .attr("cy", function (d) { return (svgHeight- d[1]); }) //(a required circle value, and a function of what it returns)  // Hint: we want to return d[] with the y value of the array 
                 .attr("r", 5) //(another required circle value, and a number: try 10)
                 .style("fill", "red"); //optional: change the color of the circles 
             
@@ -70,7 +71,7 @@
                   .append("text")
                   .text(d=>d) //we want the text to return the data values
                   .attr("x", function (d) { return (d[0]); }) //we want to give the text an x value, use what you used above, mind the difference between circle text properties 
-                  .attr("y", function (d) { return (d[1]); }); //we want to give the text a y value, use what you used above, mind the difference between circle text properties 
+                  .attr("y", function (d) { return (svgHeight-d[1]); }); //we want to give the text a y value, use what you used above, mind the difference between circle text properties 
 
 
         /*OPTIONAL: other .attr() properties you might add to a text 

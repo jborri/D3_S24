@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>Interactive Multi-line Chart Homework 4</title>
+    <script src="https://d3js.org/d3.v7.min.js"></script>
+    <style type="text/css">
+         .axis line{
+                    stroke: rgb(169, 57, 13);
+                }
+                .line {
+                    fill: none;
+                    stroke-width: 2px;
+                    /*stroke: green;*/
+                    
+                }
+                
+                /*bottons*/
+                button {
+                    display: inline-block;
+                    background-color: midnightblue;
+                    border: none;
+                    color: white;
+                    text-align: center;
+                    text-decoration: none;
+                    border-radius: 2px;
+                    font-size: 12px;
+                    transition-duration: 0.4s;
+                    
+                    
+                }
+                /*button:hover {
+                    background-color: mediumorchid;
+                }*/
+                h1 {
+                    font-family: sans-serif;
+                    font-size: 28px;
+                    color: midnightblue;
+                }
+                #buttonAvg{
+                    background-color: blue;
+                    
+                }
+                #buttonMin{
+                    background-color: green;
+                }
+                #buttonMax{
+                    background-color: purple;
+                }
+                #buttonMax:hover {
+                    background-color: mediumpurple;
+                }
+                #buttonMin:hover {
+                    background-color: mediumseagreen;
+                }
+                #buttonAvg:hover {
+                    background-color: lightskyblue;
+                }
+    </style>
+</head>
+<body>
+    <button id="buttonMin">Min Temp</button>
+    <button id="buttonAvg">Avg Temp</button>
+    <button id="buttonMax">Max Temp</button>
+    <br>
+
+    <script type="text/javascript">
+        
+        const w = 600; // Width
+        const h = 600; // Height
+        const margin = 75; // Margin
+        const parseTime = d3.timeParse("%Y-%m");
+
+ //Data and Related Variables
+            
+            /*The data we will be using is related to temperature of
+            Central Park in NYC collected by the National Weather Service.
+            Source: https://www.weather.gov/wrh/Climate?wfo=okx) */
+d3.csv("nyc-2023.csv").then(data => {
+    // Format data
+    data.forEach(d => {
+        d.date = parseTime(d.date);
+        d.max = +d.max;
+        d.min = +d.min;
+        d.avg = +d.avg;
+    });
+
+    // Scales
+    const xScale = d3.scaleTime()
+        .domain(d3.extent(data, d => d.date))
+        .range([margin, w - margin]);
+
+    const yScale = d3.scaleLinear()
+        .domain([0, d3.max(data, d => d.max)])
+        .range([h - margin, margin]);
+
+    // SVG element
+    const svg = d3.select("body")
+        .append("svg")
+        .attr("width", w)
+        .attr("height", h)
+        .style("background-color", "rgb(153, 218, 204)");
+
+    // Axes
+    const bottomAxis = d3.axisBottom()
+        .scale(xScale)
+        .tickFormat(d3.timeFormat("%b"));
+
+    svg.append("g")
+        .attr("class", "axis")
+        .attr("transform", "translate(0," + (h - margin) + ")")
+        .call(bottomAxis);
+
+    const leftAxis = d3.axisLeft()
+                       .scale(yScale);
+                       //.ticks(11);
+
+    svg.append("g")
+        .attr("class", "axis")
+        .attr("transform", "translate(" + margin + ",0)")
+        .call(leftAxis);
+
+    // Line functions
+    const line1 = d3.line()
+        .curve(d3.curveBasis)
+        .x(d => xScale(d.date))
+        .y(d => yScale(d.max));
+
+    const line2 = d3.line()
+        .curve(d3.curveBasis)
+        .x(d => xScale(d.date))
+        .y(d => yScale(d.min));
+
+    const line3 = d3.line()
+        .curve(d3.curveBasis)
+        .x(d => xScale(d.date))
+        .y(d => yScale(d.avg));
+
+    //Chart Labels
+    //x axis labels
+    svg.append("text")
+                .attr("x", 300-(margin/2))
+                .attr("y", 575)
+                .attr("font-size", "18px")
+                .attr("fill", "black")
+                .text("Month");
+
+            //y axis labels
+            svg.append("text")
+                .attr("x", 0)
+                .attr("y", 300-(margin/2))
+                .attr("font-size", "18px")
+                .attr("transform", "rotate(-90, 75, 300)")
+                .attr("fill", "black")
+                .text("Temperature (F)");
+
+            //Graph Title
+            svg.append("text")
+                .attr("x", 150-(margin/2))
+                .attr("y", 40)
+                .attr("font-size", "18px")
+                //.attr("transform", "rotate(-90, 70, 300)")
+                .attr("fill", "black")
+                .text("Summary of Temperatures in Central Park in 2023");
+
+    // Function to draw lines
+    function drawData(which, color) {
+        svg.selectAll(".line").remove(); // Remove existing lines
+
+        let line;
+        if (which === "min") line = line2;
+        else if (which === "avg") line = line3;
+        else line = line1;
+
+        svg.append("path")
+            .data([data])
+            .attr("d", line(data))
+            .attr("class", "line")
+            .attr("stroke", color); // Set the stroke color
+            //attr("stroke", "none");
+    }
+
+    // Event listener for button clicks
+    d3.selectAll("button").on("click", function() {
+        const selectedId = d3.select(this).attr("id");
+        let dataType, color;
+        if (selectedId === "buttonMin") {
+            dataType = "min";
+            color = "green";
+        } else if (selectedId === "buttonAvg") {
+            dataType = "avg";
+            color = "blue";
+        } else if (selectedId === "buttonMax") {
+            dataType = "max";
+            color = "purple";
+        }
+        drawData(dataType, color); // Draw line with specified data type and color
+    });
+
+    // Draw default line
+    drawData("avg", "blue");
+    
+});
+    </script>
+</body>
+</html>
