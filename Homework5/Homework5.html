@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <title>Homework 5</title>
+        <script src= "https://d3js.org/d3.v7.min.js"></script>
+        <style type="text/css">
+
+            .labels{
+            font-size: 12px;
+            font-weight: bold;
+            font-family: sans-serif;
+          }
+
+        </style>
+    </head>
+    <body>
+        <script type="text/javascript">
+            // Data
+            /* Data complied by me, for a project last semester that deals with
+            which areas of my life I have the most difficuty in making a decision.*/
+
+            d3.csv("Homework5.csv").then(data => {
+                console.log("data", data)
+
+                //format data
+                data.forEach(d => {
+                d.Type = d.Type;
+                d.Count = +d.Count;
+                });
+
+            //constants
+            const w = 600;
+            const h = 600;
+            const margin = 5;
+
+            //color constants
+            const myColor = d3.scaleOrdinal(["royalblue", "darkorange", "darkgray", "goldenrod", "cornflowerblue"]);
+
+            //Radius
+            //const outerRadius = w/2;
+            const outerRadius = 280;
+            const innerRadius = 0;
+
+            //arc 
+            const arc = d3.arc()
+                          .innerRadius(innerRadius)
+                          .outerRadius(outerRadius)
+                          //.cornerRadius(10);
+
+            //pie generator
+            const pie = d3.pie().value(d=>d.Count);
+                            //.padAngle(.04)
+                            //.startAngle(-0.5 * Math.PI)
+                           // .endAngle(0.5 * Math.PI);
+                            //.startAngle(0 * Math.PI)
+                            //.endAngle(1 * Math.PI)
+                            //.startAngle(0 * Math.PI)
+                            //.endAngle(0.5 * Math.PI);
+                            // .startAngle(0.5 * Math.PI)
+                            // .endAngle(2 * Math.PI);
+                            // .startAngle(-0.5 * Math.PI)
+                            // .endAngle(0 * Math.PI);
+
+            //SVG
+                const svg = d3.select("body")
+                              .append("svg")
+                              .attr("width", w)
+                              .attr("height", h);
+
+            //groups for chart
+            const groups = svg.selectAll("g.arc")
+                          .data(pie(data))
+                          .enter()
+                          .append("g")
+                          .attr("class", "arc")
+                          .attr("transform", "translate(" + outerRadius + "," + outerRadius + ")");
+                          console.log("pie data", pie(data));
+
+            groups.append("path")
+                  .attr("fill", (d,i)=> myColor(i))
+                  .attr("d", arc);
+
+            //labels
+            groups.append("text")
+                  .attr("transform", d=> "translate(" + arc.centroid(d) + ")")
+                  .attr("text-anchor", "middle")
+                  .attr("class", "labels")
+                  .text(d=>d.data.Type);
+
+             //Graph Title
+            svg.append("text")
+                .attr("x", 140-(margin/2))
+                .attr("y", 580)
+                .attr("font-size", "18px")
+                //.attr("transform", "rotate(-90, 70, 300)")
+                .attr("fill", "black")
+                .text("Areas of My Life with Greatest Indecision");
+
+                    
+            });
+
+        </script>
+    </body>
+</html>
