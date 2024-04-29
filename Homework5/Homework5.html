@@ -48,10 +48,13 @@
             const outerRadius = 280;
             const innerRadius = 0;
 
+            
+
             //arc 
             const arc = d3.arc()
                           .innerRadius(innerRadius)
                           .outerRadius(outerRadius)
+                          
                           //.cornerRadius(10);
 
             //pie generator
@@ -94,7 +97,7 @@
                   .attr("class", "labels")
                   .attr("fill", "rgb(116, 128, 110)")
                   .text(d=>d.data.Type)
-                  .on('mouseover', function(d,i) {return d.value})
+                  
                     ;
 
              //Graph Title
