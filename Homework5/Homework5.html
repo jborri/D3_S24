@@ -10,14 +10,20 @@
             font-size: 12px;
             font-weight: bold;
             font-family: sans-serif;
+            text-color: rgb(220, 206, 206);
           }
-
+          .title{
+            font-family: sans-serif;
+                    font-size: 14px;
+                    /*color: rgb(211, 211, 230);*/
+          }
+          
         </style>
     </head>
     <body>
         <script type="text/javascript">
             // Data
-            /* Data complied by me, for a project last semester that deals with
+            /* Data is an edited version for a project last semester that deals with
             which areas of my life I have the most difficuty in making a decision.*/
 
             d3.csv("Homework5.csv").then(data => {
@@ -35,7 +41,7 @@
             const margin = 5;
 
             //color constants
-            const myColor = d3.scaleOrdinal(["royalblue", "darkorange", "darkgray", "goldenrod", "cornflowerblue"]);
+            const myColor = d3.scaleOrdinal(["lightgrey", "lightblue", "rgb(177, 226, 152)", "rgb(151, 151, 210)", "lightseagreen"]);
 
             //Radius
             //const outerRadius = w/2;
@@ -86,15 +92,19 @@
                   .attr("transform", d=> "translate(" + arc.centroid(d) + ")")
                   .attr("text-anchor", "middle")
                   .attr("class", "labels")
-                  .text(d=>d.data.Type);
+                  .attr("fill", "rgb(116, 128, 110)")
+                  .text(d=>d.data.Type)
+                  .on('mouseover', function(d,i) {return d.value})
+                    ;
 
              //Graph Title
             svg.append("text")
-                .attr("x", 140-(margin/2))
-                .attr("y", 580)
-                .attr("font-size", "18px")
+                .attr("x", 150-(margin/2))
+                .attr("y", 590)
+                //.attr("font-size", "18px")
                 //.attr("transform", "rotate(-90, 70, 300)")
-                .attr("fill", "black")
+                .attr("class", "title")
+                .attr("fill", "rgb(116, 128, 110)")
                 .text("Areas of My Life with Greatest Indecision");
 
                     
