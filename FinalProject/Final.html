@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <title>Template</title>
+        <script src= "https://d3js.org/d3.v7.min.js"></script>
+        <style type="text/css">
+            /*TBD */
+        </style>
+    </head>
+    <body>
+        <script type="text/javascript">
+            
+            // Data
+            /* Data is an edited version for a project last semester that deals with
+            which areas of my life I have the most difficuty in making a decision.*/
+
+            d3.csv("Books_2023.csv").then(data => {
+                console.log("data", data)
+
+                //format data
+                data.forEach(d => {
+                d.Type = d.Type;
+                d.Count = +d.Count;
+                });
+
+            //format data
+            data.forEach(d => {
+
+                d.date = parseTime(d.date);
+                d.max = +d.max;
+                d.min = +d.min;
+                d.avg = +d.avg;
+                    });
+
+            //scales
+            const xScale = d3.scaleTime() //using timescale as x axis scale
+                                //.domain([0, maxX])
+                                .domain(d3.extent(data, d => d.date))
+                                .range([margin, w-margin]);
+                                
+
+            const yScale = d3.scaleLinear()
+                               // .domain([0, maxY])
+                                .domain([0, d3.max(data, d => d.max)])
+                                .range([h-margin, margin]);
+
+            //constants
+            const w = 6000;
+            const h = 6000;
+            const margin = 5;const
+            parseTime = d3.timeParse("%Y-%m");
+
+            //color constants
+            const myColor = d3.scaleOrdinal(["lightgrey", "lightblue", "rgb(177, 226, 152)", "rgb(151, 151, 210)", "lightseagreen"]);
+
+                    //PIE
+
+            //Radius
+            //const outerRadius = w/2;
+            const outerRadius = 280;
+            const innerRadius = 0;
+            //arc 
+            const arc = d3.arc()
+                          .innerRadius(innerRadius)
+                          .outerRadius(outerRadius)
+                          
+                          //.cornerRadius(10);
+
+            //pie generator
+            const pie = d3.pie().value(d=>d.Count);
+                            //.padAngle(.04)
+                            //.startAngle(-0.5 * Math.PI)
+                           // .endAngle(0.5 * Math.PI);
+                            //.startAngle(0 * Math.PI)
+                            //.endAngle(1 * Math.PI)
+                            //.startAngle(0 * Math.PI)
+                            //.endAngle(0.5 * Math.PI);
+                            // .startAngle(0.5 * Math.PI)
+                            // .endAngle(2 * Math.PI);
+                            // .startAngle(-0.5 * Math.PI)
+                            // .endAngle(0 * Math.PI);
+
+            //SVG
+                const svg2 = d3.select("body")
+                              .append("svg")
+                              .attr("width", w)
+                              .attr("height", h);
+
+            //groups for chart
+            const groups = svg2.selectAll("g.arc")
+                          .data(pie(data))
+                          .enter()
+                          .append("g")
+                          .attr("class", "arc")
+                          .attr("transform", "translate(" + outerRadius + "," + outerRadius + ")");
+                          console.log("pie data", pie(data));
+
+            groups.append("path")
+                  .attr("fill", (d,i)=> myColor(i))
+                  .attr("d", arc);
+
+
+                  //LINE
+                  //SVG elements
+            const svg = d3.select("body")
+                    .append("svg")
+                    .attr("width", w)
+                    .attr("height", h)
+                    .style("background-color", "rgb(153, 218, 204)");
+
+            //bottom axis formatting
+            const bottomAxis = d3.axisBottom()
+                                .scale(xScale)
+                                .tickFormat(d3.timeFormat("%b"));
+                                
+
+            svg.append("g")
+                .attr("class", "axis")
+                .attr("transform", "translate(0," + (h - margin) + ")")
+                .call(bottomAxis);
+
+            //left axis formatting
+            const leftAxis = d3.axisLeft()
+                                .scale(yScale)
+                                //.ticks(11);
+
+            svg.append("g")
+                .attr("class", "axis")
+                .attr("transform", "translate(" + margin + ",0)")
+                //.attr("stroke", "purple")
+                .call(leftAxis);
+
+            //Generating line (1) attributes?
+            const line = d3.line()
+                            .curve(d3.curveBasis)
+                            .x(d => xScale(d.date))
+                            .y(d => yScale(d.max));
+
+            const line2 = d3.line()
+                            .curve(d3.curveBasis)
+                            .x(d => xScale(d.date))
+                            .y(d => yScale(d.min));
+
+            const line3 = d3.line()
+                            .curve(d3.curveBasis)
+                            .x(d => xScale(d.date))
+                            .y(d => yScale(d.avg));
+
+            //line
+            svg.append("path")
+                .data([data])
+                .attr("d", line(data))
+                .attr("class", "line")
+                .attr("stroke", "purple");
+                console.log("path",line(data));
+
+            svg.append("path")
+                .data([data])
+                .attr("d", line2(data))
+                .attr("class", "line")
+                .attr("stroke", "green");
+                console.log("path",line2(data));
+
+            svg.append("path")
+                .data([data])
+                .attr("d", line3(data))
+                .attr("class", "line")
+                .attr("stroke", "blue");
+                console.log("path",line3(data));
+        </script>
+    </body>
+</html> 
