@@ -1,0 +1,370 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>Final Project: Top Selling Books Over the Years</title>
+    <script src="https://d3js.org/d3.v7.min.js"></script>
+    <style type="text/css">
+
+         /* CSS styles for the bar chart */
+         .bar {
+            fill: steelblue;
+        }
+
+        .bar:hover {
+            fill: skyblue;
+        }
+
+        .bar text {
+            fill: white;
+            font-size: 12px;
+            text-anchor: end;
+            dominant-baseline: middle;
+        }
+
+        /* Buttons */
+        button {
+            display: inline-block;
+            background-color: rgb(116, 128, 110);
+            border: none;
+            color: white;
+            text-align: center;
+            text-decoration: none;
+            border-radius: 2px;
+            font-size: 12px;
+            transition-duration: 0.4s;
+        }
+        
+        h1 {
+            font-family: sans-serif;
+            font-size: 28px;
+            color: midnightblue;
+        }
+        
+        #button1990s {
+            background-color: blue;
+        }
+        
+        #button2000s {
+            background-color: green;
+        }
+        
+        #button2010s {
+            background-color: purple;
+        }
+        
+        #button2020s {
+            background-color: yellow;
+        }
+        
+        #button1990s:hover {
+            background-color: mediumpurple;
+        }
+        
+        #button2000s:hover {
+            background-color: mediumseagreen;
+        }
+        
+        #button2010s:hover {
+            background-color: lightskyblue;
+        }
+        
+        #button2020s:hover {
+            background-color: goldenrod;
+        }
+    </style>
+</head>
+<body>
+    
+    <button id="button1990s">1990s</button>
+    <button id="button2000s">2000s</button>
+    <button id="button2010s">2010s</button>
+    <button id="button2020s">2020s</button>
+    <br>
+
+    <script type="text/javascript">
+        // Data
+        /* Data was collected and cleaned by me using information from goodreads.com
+         and The Publishers Weekly Best Selling Books of the United States*/
+        d3.csv("Yearly_Best_Sellers12.csv").then(data => {
+            console.log("data", data)
+
+            // Format data
+            data.forEach(d => {
+                d.Genre = d.Genre;
+                d.CountTotal = +d.CountTotal;
+                d.Count90 = +d.Count90;
+                d.Count00 = +d.Count00;
+                d.Count10 = +d.Count10;
+                d.Count20 = +d.Count20;
+            });
+
+            // Constants
+            const w = 6000;
+            const h = 6000;
+            const margin = 5;
+            
+
+            // Color constants
+            const myColor = d3.scaleOrdinal(["lightgrey", "lightblue", "rgb(177, 226, 152)", "rgb(151, 151, 210)", "lightseagreen", "red", "orange", "yellow", "purple", "gold", "blue", "Blue", "Pink", "Teal", "Green", "Indigo"]);
+
+            // Radius
+            const outerRadius = 280;
+            const innerRadius = 0;
+
+            // Arc 
+            const arc = d3.arc()
+                .innerRadius(innerRadius)
+                .outerRadius(outerRadius);
+
+            // Pie generator for Total Count
+            const pie = d3.pie().value(d => d.CountTotal);
+
+            // Pie generator for 90s
+            const pie90 = d3.pie().value(d => d.Count90);
+
+            // Pie generator for 2000s
+            const pie00 = d3.pie().value(d => d.Count00);
+
+            // Pie generator for 2010s
+            const pie10 = d3.pie().value(d => d.Count10);
+
+            // Pie generator for 2020s
+            const pie20 = d3.pie().value(d => d.Count20);
+
+            // SVG
+            const svg = d3.select("body")
+                .append("svg")
+                .attr("width", w)
+                .attr("height", h);
+
+        //Graph Title
+        svg.append("text")
+                .attr("x", 80-(margin/2))
+                .attr("y", 590)
+                //.attr("font-size", "18px")
+                //.attr("transform", "rotate(-90, 70, 300)")
+                .attr("class", "title")
+                .attr("fill", "rgb(116, 128, 110)")
+                .text("Genres That Appear on Publishers Weekly Best Sellers by Decade");
+
+
+            // Draw Data Function
+            function drawData(which) {
+                svg.selectAll(".arc").remove(); // Remove existing pie chart arcs
+
+                let pie;
+                if (which === "Count90") pie = pie90;
+                else if (which === "Count00") pie = pie00;
+                else if (which === "Count10") pie = pie10;
+                else if (which === "Count20") pie = pie20;
+                else pie = pie20; // Default to Count20
+
+                const groups = svg.selectAll("g.arc") // Select new arcs
+                    .data(pie(data))
+                    .enter()
+                    .append("g")
+                    .attr("class", "arc")
+                    .attr("transform", "translate(" + outerRadius + "," + outerRadius + ")");
+
+                groups.append("path")
+                    .attr("fill", (d, i) => myColor(i))
+                    .attr("d", arc);
+
+                groups.append("text")
+                    .attr("transform", d => "translate(" + arc.centroid(d) + ")")
+                    .attr("text-anchor", "middle")
+                    .attr("class", "labels")
+                    .attr("fill", "black")
+                    .text(d => d.data.Genre);
+            }
+// SVG for Legend
+const legend = svg.append("g")
+    .attr("class", "legend")
+    .attr("transform", "translate(600,50)"); // Adjust position?
+
+// Add Legend Items
+const legendItems = legend.selectAll(".legend-item")
+    .data([...new Set(data.map(d => d.Genre))]) // Use unique genres
+    .enter()
+    .append("g")
+    .attr("class", "legend-item")
+    .attr("transform", (d, i) => "translate(0," + (i * 20) + ")"); // Adjust spacing
+
+// Add colored rectangles
+legendItems.append("rect")
+    .attr("x", 0)
+    .attr("y", 0)
+    .attr("width", 10)
+    .attr("height", 10)
+    .attr("fill", (d, i) => myColor(i)); // Use color scale to fill rectangles, i think lol
+
+// Add genre labels
+legendItems.append("text")
+    .attr("x", 15)
+    .attr("y", 5)
+    .attr("dy", "0.35em")
+    .text(d => d)
+    .style("font-size", "12px")
+    .attr("fill", "rgb(116, 128, 110)");
+
+            
+            //Legend Label
+            
+        svg.append("text")
+                .attr("x", 600-(margin/2))
+                .attr("y", 25)
+                //.attr("font-size", "18px")
+                //.attr("transform", "rotate(-90, 70, 300)")
+                .attr("class", "title")
+                .attr("fill", "Black")
+                .text("Legend");
+
+
+            // Event listener for button clicks
+            d3.selectAll("button").on("click", function () {
+                const selectedText = d3.select(this).text(); // Get the text of the clicked button
+                let dataType;
+                if (selectedText === "1990s") {
+                    dataType = "Count90";
+                } else if (selectedText === "2000s") {
+                    dataType = "Count00";
+                } else if (selectedText === "2010s") {
+                    dataType = "Count10";
+                } else if (selectedText === "2020s") {
+                    dataType = "Count20";
+                }
+                drawData(dataType); // Draw pie chart with this data type
+            });
+
+            // Initial pie chart
+            drawData("CountTotal");
+
+            const xScale = d3.scaleLinear() 
+                                //.domain([0, maxX])
+                                .domain(d3.extent(data, d => d.Length))
+                                .range([margin, 600]);
+                                
+
+            const yScale = d3.scaleLinear()
+                               // .domain([0, maxY])
+                                .domain([3, d3.max(data, d => d.Rating)])
+                                .range([500-margin, margin]);
+    
+// Create x and y axes
+const xAxis = d3.axisBottom()
+                 .scale(xScale);
+const yAxis = d3.axisLeft()
+                .scale(yScale);
+
+        // Append x axis to SVG
+        svg.append("g")
+            .attr("class", "axis")
+            .attr("transform", "translate(55," + 1150 + ")")
+            .call(xAxis);
+
+        // Append y axis to SVG
+        svg.append("g")
+                .attr("class", "axis")
+                .attr("transform", "translate(" + margin+5 + ",650)")
+                //.attr("stroke", "purple")
+                .call(yAxis);
+            
+
+        // Create circles for data points
+        svg.selectAll("circle")
+            .data(data)
+            .enter()
+            .append("circle")
+            .attr("cx", d => xScale(d.Length))
+            .attr("cy", d => yScale(d.Rating))
+            .attr("r", 3) // radius of circles
+            .attr("transform", "translate(60," + 650 + ")");
+    
+            svg.append("text")
+                .attr("x", 200-(margin/2))
+                .attr("y", 1200)
+                .attr("font-size", "18px")
+                .attr("fill", "black")
+                .text("Number of Pages");
+
+            //y axis labels
+            svg.append("text")
+                .attr("x", -550)
+                .attr("y", 250-(margin/2))
+                .attr("font-size", "18px")
+                .attr("transform", "rotate(-90, 75, 300)")
+                .attr("fill", "black")
+                .text("Rating");
+
+            
+        });
+       /* const width = 2300;
+        const height = 2300;
+        const margin1 = { top: 20, right: 20, bottom: 30, left: 1550 };
+         // Create SVG element for bar chart
+         const svg1 = d3.select("#barChart")
+        .attr("width", 800) // Adjust width as needed
+        .attr("height", 600); // Adjust height as needed
+
+        // Dataset
+        const data1 = [
+            { author: 'John Grisham', books: 32 },
+            { author: 'Stephen King', books: 23 },
+            { author: 'Danielle Steel', books: 22 },
+            { author: 'James Patterson', books: 19 },
+            { author: 'Nicolas Sparks', books: 12 },
+            { author: 'Patricia Cornwell', books: 11 },
+            { author: 'Jeff Kinney', books: 11 },
+            { author: 'Tom Clancy', books: 10 },
+            { author: 'Janet Evanovich', books: 10 },
+            { author: 'Colleen Hoover', books: 10 },
+        ];
+
+        const xScale = d3.scaleLinear()
+    .domain([0, d3.max(data1, d => d.books)])
+    .range([margin1.left, 800 - margin1.right]); // Adjusted width calculation
+
+const yScale = d3.scaleBand()
+    .domain(data1.map(d => d.author))
+    .range([margin1.top, 400 - margin1.bottom])
+    .padding(0.1);
+    
+
+        // Create bars
+        svg1.selectAll('rect')
+            .data(data1)
+            .join('rect')
+            .attr('class', 'bar')
+            .attr('x', margin1.left)
+            .attr('y', d => yScale(d.author))
+            .attr('width', d => xScale(d.books) - margin1.left) // Correct width calculation
+            .attr('height', yScale.bandwidth());
+            
+
+        // Add labels
+        svg1.selectAll('text')
+            .data(data1)
+            .join('text')
+            .attr('x', d => xScale(d.books))
+            .attr('y', d => yScale(d.author) + yScale.bandwidth() / 2)
+            .attr('dy', '0.35em')
+            .attr('dx', 5)
+            .text(d => d.books)
+            .attr('text-anchor', 'end');
+
+        // Add x-axis
+        svg1.append('g')
+            .attr('transform', `translate(0,${400 - margin1.bottom})`)
+            .call(d3.axisBottom(xScale));
+
+        // Add y-axis
+        svg1.append('g')
+            .attr('transform', `translate(${margin1.left},0)`)
+            .call(d3.axisLeft(yScale));*/
+
+
+        
+    </script>
+</body>
+</html>

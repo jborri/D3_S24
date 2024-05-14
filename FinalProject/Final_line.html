@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <title>Template</title>
+        <script src= "https://d3js.org/d3.v7.min.js"></script>
+        <style type="text/css">
+           
+    </style>
+</head>
+<body>
+    
+        <script type="text/javascript">
+        const w = 500; // Width
+        const h = 500; // Height
+        const margin = 55; // Margin;
+
+ //Data and Related Variables
+            
+            /*The data we will be using is related to temperature of
+            Central Park in NYC collected by the National Weather Service.
+            Source: https://www.weather.gov/wrh/Climate?wfo=okx) */
+d3.csv("Yearly_Best_Sellers1.csv").then(data => {
+    // Format data
+    data.forEach(d => {
+        d.Length = d.Length;
+        d.Rating = d.Rating;
+    })
+    const svg = d3.select("body")
+                .append("svg")
+                .attr("width", w) 
+                .attr("height", h);
+                //.append("g")
+                //.attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+
+               const xScale = d3.scaleLinear() //using timescale as x axis scale
+                                //.domain([0, maxX])
+                                .domain(d3.extent(data, d => d.Length))
+                                .range([margin, w-margin]);
+                                
+
+            const yScale = d3.scaleLinear()
+                               // .domain([0, maxY])
+                                .domain([3, d3.max(data, d => d.Rating)])
+                                .range([h-margin, margin]);
+    
+// Create x and y axes
+const xAxis = d3.axisBottom()
+                 .scale(xScale);
+const yAxis = d3.axisLeft()
+                .scale(yScale);
+
+        // Append x axis to SVG
+        svg.append("g")
+            .attr("class", "axis")
+            .attr("transform", "translate(0," + 450 + ")")
+            .call(xAxis);
+
+        // Append y axis to SVG
+        svg.append("g")
+                .attr("class", "axis")
+                .attr("transform", "translate(" + margin + ",0)")
+                //.attr("stroke", "purple")
+                .call(yAxis);
+            
+
+        // Create circles for data points
+        svg.selectAll("circle")
+            .data(data)
+            .enter()
+            .append("circle")
+            .attr("cx", d => xScale(d.Length))
+            .attr("cy", d => yScale(d.Rating))
+            .attr("r", 3); // radius of circles
+    
+            svg.append("text")
+                .attr("x", 200-(margin/2))
+                .attr("y", 490)
+                .attr("font-size", "18px")
+                .attr("fill", "black")
+                .text("Number of Pages");
+
+            //y axis labels
+            svg.append("text")
+                .attr("x", 95)
+                .attr("y", 270-(margin/2))
+                .attr("font-size", "18px")
+                .attr("transform", "rotate(-90, 75, 300)")
+                .attr("fill", "black")
+                .text("Rating");
+    
+    
+});
+        </script>
+    </body>
+</html>
