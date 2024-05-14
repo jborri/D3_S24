@@ -10,7 +10,7 @@
             fill: steelblue;
         }
         .bar:hover {
-            fill: orange;
+            fill: skyblue;
         }
         .axis-x text {
             font-size: 12px;
@@ -24,7 +24,7 @@
     <svg width="5000" height="5000"></svg>
 
     <script>
-        const data = [
+        const data1 = [
             { author: "John Grisham", books: 32 },
             { author: "Stephen King", books: 23 },
             { author: "Danielle Steel", books: 22 },
@@ -38,8 +38,8 @@
         ];
 
         const margin = { top: 20, right: 20, bottom: 50, left: 60 };
-        const width = 500 - margin.left - margin.right;
-        const height = 300 - margin.top - margin.bottom;
+        const width = 800 - margin.left - margin.right;
+        const height = 800 - margin.top - margin.bottom;
 
         const svg = d3.select("svg")
             .attr("width", width + margin.left + margin.right)
@@ -48,12 +48,12 @@
             .attr("transform", `translate(${margin.left}, ${margin.top})`);
 
         const x = d3.scaleBand()
-            .domain(data.map(d => d.author))
+            .domain(data1.map(d => d.author))
             .range([0, width])
             .padding(0.1);
 
         const y = d3.scaleLinear()
-            .domain([0, d3.max(data, d => d.books)])
+            .domain([0, d3.max(data1, d => d.books)])
             .nice()
             .range([height, 0]);
 
@@ -68,14 +68,14 @@
             .style("text-anchor", "end")
             .attr("dx", "-.8em")
             .attr("dy", ".15em")
-            .attr("transform", "rotate(-45)");
+            .attr("transform", "rotate(-25)");
 
         svg.append("g")
             .attr("class", "axis-y")
             .call(yAxis);
 
         svg.selectAll(".bar")
-            .data(data)
+            .data(data1)
             .enter().append("rect")
             .attr("class", "bar")
             .attr("x", d => x(d.author))
