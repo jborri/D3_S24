@@ -60,6 +60,15 @@
         const xAxis = d3.axisBottom(x);
         const yAxis = d3.axisLeft(y);
 
+         //y axis labels
+         svg.append("text")
+                .attr("x", 5)
+                .attr("y", 5 -(margin/2))
+                .attr("font-size", "18px")
+                .attr("transform", "rotate(-90, 75, 300)")
+                .attr("fill", "black")
+                .text("Rating");
+
         svg.append("g")
             .attr("class", "axis-x")
             .attr("transform", `translate(0, ${height})`)
@@ -81,7 +90,11 @@
             .attr("x", d => x(d.author))
             .attr("y", d => y(d.books))
             .attr("width", x.bandwidth())
-            .attr("height", d => height - y(d.books));
+            .attr("height", d => height - y(d.books))
+            
+            
+             
+
 
     </script>
 </body>

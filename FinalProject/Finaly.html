@@ -54,7 +54,7 @@
         }
         
         #button2020s {
-            background-color: yellow;
+            background-color: goldenrod;
         }
         
         #button1990s:hover {
@@ -70,7 +70,8 @@
         }
         
         #button2020s:hover {
-            background-color: goldenrod;
+            background-color: yellow;
+            
         }
     </style>
 </head>
@@ -279,10 +280,11 @@ const yAxis = d3.axisLeft()
             .attr("cx", d => xScale(d.Length))
             .attr("cy", d => yScale(d.Rating))
             .attr("r", 3) // radius of circles
-            .attr("transform", "translate(60," + 650 + ")");
+            .attr("transform", "translate(60," + 650 + ")")
+            .attr("fill", "red");
     
             svg.append("text")
-                .attr("x", 200-(margin/2))
+                .attr("x", 285-(margin/2))
                 .attr("y", 1200)
                 .attr("font-size", "18px")
                 .attr("fill", "black")
@@ -296,6 +298,16 @@ const yAxis = d3.axisLeft()
                 .attr("transform", "rotate(-90, 75, 300)")
                 .attr("fill", "black")
                 .text("Rating");
+
+                svg.append("text")
+                .attr("x", 280-(margin/2))
+                .attr("y", 650)
+                .attr("font-size", "18px")
+                //.attr("transform", "rotate(-90, 70, 300)")
+                .attr("class", "title")
+                .attr("fill", "rgb(116, 128, 110)")
+                .attr("fill", "black")
+                .text("Rating vs. Book Length");
 
             
         });
