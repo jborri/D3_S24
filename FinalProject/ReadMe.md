@@ -6,3 +6,7 @@ I would like to explore which **genres**, the **length of the book**, and which 
 
 
 The **interactive component** would be each **10-year period**. I am also considering extending the groupings to 20 or even 30 years if 10 years is too restrictive to observe any marginal differences.
+
+**Data Sources:**
+[GoodReads](https://www.goodreads.com/)
+[Wikipedia](https://en.wikipedia.org/wiki/Publishers_Weekly_lists_of_bestselling_novels_in_the_United_States)
