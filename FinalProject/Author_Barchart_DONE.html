@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <title>Books of Authors on Best Sellers List</title>
+        <script src= "https://d3js.org/d3.v7.min.js"></script>
+        <style type="text/css">
+            .bar {
+                fill: steelblue;
+            }
+            .bar:hover {
+                fill: skyblue;
+            }
+            .axis-x text {
+                font-size: 12px;
+            }
+            .axis-y text {
+                font-size: 12px;
+            }
+        </style>
+    </head>
+    <body>
+        <script type="text/javascript">
+            //Data for Books by Best Selling Authors
+
+        //Data and Constants
+
+        const data1 = [
+            { author: "John Grisham", books: 32 },
+            { author: "Stephen King", books: 23 },
+            { author: "Danielle Steel", books: 22 },
+            { author: "James Patterson", books: 19 },
+            { author: "Nicolas Sparks", books: 12 },
+            { author: "Patricia Cornwell", books: 11 },
+            { author: "Jeff Kinney", books: 11 },
+            { author: "Tom Clancy", books: 10 },
+            { author: "Janet Evanovich", books: 10 },
+            { author: "Colleen Hoover", books: 10 }
+        ];
+
+
+        const wbar = 600; // Width
+        const hbar = 600; // Height
+        const marginbar = 75; // Margin
+        const paddingbar = 1; //padding
+
+        //Scales
+
+        const xScalebar = d3.scaleBand()
+                        .domain(data1.map(d => d.author))
+                        .range([marginbar, wbar - marginbar])
+                        .paddingInner(paddingbar)
+                        .padding(0.1);
+                        
+
+        const yScalebar = d3.scaleLinear()
+                         .domain([0, d3.max(data1, d => d.books)+ 3])
+                         .range([hbar - marginbar, marginbar]);
+
+        //SVG element
+
+        const svgbar = d3.select("body")
+                      .append("svg")
+                      .attr("id", "barchart") // Assigning an ID to the SVG element
+                      .attr("width", wbar)
+                      .attr("height", hbar)
+                      .style("background-color", "rbg(153, 218, 204)");
+                      //.attr("transform", "translate(800," + 0 + ")");
+
+        //Axes
+
+        const bottomAxisbar = d3.axisBottom()
+                             .scale(xScalebar);
+
+        svgbar.append("g")
+           .attr("class", "axis")
+           .attr("transform", "translate(0," + (hbar - marginbar) + ")")
+           .call(bottomAxisbar)
+           .selectAll("text")
+            .style("text-anchor", "end")
+            .attr("dx", "-.8em")
+            .attr("dy", ".15em")
+            .attr("transform", "rotate(-25)");
+
+        const leftAxisbar = d3.axisLeft()
+                           .scale(yScalebar);
+
+        svgbar.append("g")
+            .attr("class", "axis")
+            .attr("transform", "translate(" + marginbar + ", 0)")
+            .call(leftAxisbar);
+
+        //Bars
+        svgbar.selectAll(".bar")
+           .data(data1)
+           .enter()
+           .append("rect")
+           .attr("class", "bar")
+           .attr("x", d => xScalebar(d.author))
+           .attr("y", d => yScalebar(d.books))
+           .attr("width", xScalebar.bandwidth())
+           .attr("height", d => (hbar-marginbar) - yScalebar(d.books));
+
+        //Chart Labels
+    //x axis labels
+    svgbar.append("text")
+                .attr("x", 300-(marginbar/2))
+                .attr("y", 595)
+                .attr("font-size", "18px")
+                .attr("fill", "black")
+                .text("Authors");
+
+            //y axis labels
+            svgbar.append("text")
+                .attr("x", 0)
+                .attr("y", 300-(marginbar/2))
+                .attr("font-size", "18px")
+                .attr("transform", "rotate(-90, 75, 300)")
+                .attr("fill", "black")
+                .text("Number of Books");
+
+            //Graph Title
+            svgbar.append("text")
+                .attr("x", 150-(marginbar/2))
+                .attr("y", 40)
+                .attr("font-size", "18px")
+                //.attr("transform", "rotate(-90, 70, 300)")
+                .attr("fill", "black")
+                .text("Top 10 Authors by Appearance on Best Sellers List");
+
+    
+
+        </script>
+    </body>
+</html>

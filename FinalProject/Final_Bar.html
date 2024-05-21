@@ -47,6 +47,15 @@
             .append("g")
             .attr("transform", `translate(${margin.left}, ${margin.top})`);
 
+                                 //y axis labels
+                                 svg.append("text")
+                //.attr("x", 5)
+                //.attr("y", 5)
+                .attr("font-size", "18px")
+                .attr("transform", "rotate(-90, 75, 300)")
+                .attr("fill", "black")
+                .text("Rating");
+
         const x = d3.scaleBand()
             .domain(data1.map(d => d.author))
             .range([0, width])
@@ -60,14 +69,8 @@
         const xAxis = d3.axisBottom(x);
         const yAxis = d3.axisLeft(y);
 
-         //y axis labels
-         svg.append("text")
-                .attr("x", 5)
-                .attr("y", 5 -(margin/2))
-                .attr("font-size", "18px")
-                .attr("transform", "rotate(-90, 75, 300)")
-                .attr("fill", "black")
-                .text("Rating");
+
+
 
         svg.append("g")
             .attr("class", "axis-x")
@@ -78,6 +81,15 @@
             .attr("dx", "-.8em")
             .attr("dy", ".15em")
             .attr("transform", "rotate(-25)");
+
+             //y axis labels
+        svg.append("text")
+                .attr("x", 5)
+                .attr("y", 5 -(margin/2))
+                .attr("font-size", "18px")
+                .attr("transform", "rotate(-90, 75, 300)")
+                .attr("fill", "black")
+                .text("Rating");
 
         svg.append("g")
             .attr("class", "axis-y")

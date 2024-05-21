@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <title>Rating vs. Book Length</title>
+        <script src= "https://d3js.org/d3.v7.min.js"></script>
+        <style type="text/css">
+            /*TBD */
+        </style>
+    </head>
+    <body>
+        <script type="text/javascript">
+
+        // Constants
+
+            const wdot = 600;
+            const hdot = 600;
+            const margindot = 75;
+
+        // Data
+
+        d3.csv("Yearly_Best_Sellers12.csv").then(data => {
+            console.log("data", data)
+
+        const maxX = d3.max(data, d => d.Length);
+        const maxY = d3.max(data, d => d.Rating);
+
+        console.log("data", data);
+
+        // SVG
+        
+         const svgdot = d3.select("body")
+                       .append("svg")
+                       .attr("width", wdot)
+                       .attr("height", hdot);
+
+    //Axes
+    const xScaledot = d3.scaleLinear() 
+                                //.domain([0, maxX])
+                        .domain(d3.extent(data, d => d.Length))
+                        .range([margindot, wdot-margindot]);
+                                
+
+    const yScaledot = d3.scaleLinear()
+                               // .domain([0, maxY])
+                        .domain([3, d3.max(data, d => d.Rating)])
+                        .range([hdot-margindot, margindot]);
+
+    //bottom Axis
+    const bottomAxisdot = d3.axisBottom()
+                            .scale(xScaledot)
+                            .ticks(10);
+
+            svgdot.append("g")
+                  .attr("transform", "translate(0," + (hdot - margindot) + ")")
+                  .call(bottomAxisdot);
+
+    //Left Axis
+    const leftAxisdot = d3.axisLeft()
+                          .scale(yScaledot)
+                          .ticks(10);
+
+        svgdot.append("g")
+              .attr("transform", "translate(" + margindot + ", 0)")
+              .call(leftAxisdot);
+
+
+//Circles
+        svgdot.selectAll("circle")
+            .data(data)
+            .enter()
+            .append("circle")
+            .attr("cx", d => xScaledot(d.Length))
+            .attr("cy", d => yScaledot(d.Rating))
+            .attr("r", 3) // radius of circles
+            //.attr("transform", "translate(60," + 650 + ")")
+            .attr("fill", "red");
+    
+            svgdot.append("text")
+                .attr("x", 300-(margindot/2))
+                .attr("y", 595)
+                .attr("font-size", "18px")
+                .attr("fill", "black")
+                .text("Number of Pages");
+
+            //y axis labels
+            svgdot.append("text")
+                .attr("x", 0)
+                .attr("y", 300-(margindot/2))
+                .attr("font-size", "18px")
+                .attr("transform", "rotate(-90, 75, 300)")
+                .attr("fill", "black")
+                .text("Rating");
+
+            svgdot.append("text")
+                .attr("x", 280-(margindot/2))
+                .attr("y", 50)
+                .attr("font-size", "18px")
+                //.attr("transform", "rotate(-90, 70, 300)")
+                .attr("class", "title")
+                .attr("fill", "rgb(116, 128, 110)")
+                .attr("fill", "black")
+                .text("Rating vs. Book Length");
+        });
+        </script>
+    </body>
+</html>

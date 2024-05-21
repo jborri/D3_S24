@@ -1,97 +1,74 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="utf-8">
-    <title>Final Project: Top Selling Books Over the Years</title>
-    <script src="https://d3js.org/d3.v7.min.js"></script>
-    <style type="text/css">
+    <head>
+        <meta charset="utf-8">
+        <title>Books of Authors on Best Sellers List</title>
+        <script src= "https://d3js.org/d3.v7.min.js"></script>
+        <style type="text/css">
+            .bar {
+                fill: steelblue;
+            }
+            .bar:hover {
+                fill: skyblue;
+            }
+            .axis-x text {
+                font-size: 12px;
+            }
+            .axis-y text {
+                font-size: 12px;
+            }
 
-         /* CSS styles for the bar chart */
-         .bar {
-            fill: steelblue;
-        }
-
-        .bar:hover {
-            fill: skyblue;
-        }
-
-        .bar text {
-            fill: white;
-            font-size: 12px;
-            text-anchor: end;
-            
-        }
-
-        /* Buttons */
-        button {
-            display: inline-block;
-            background-color: rgb(116, 128, 110);
-            border: none;
-            color: white;
-            text-align: center;
-            text-decoration: none;
-            border-radius: 2px;
-            font-size: 12px;
-            transition-duration: 0.4s;
-        }
-        
-        h1 {
-            font-family: sans-serif;
-            font-size: 28px;
-            color: midnightblue;
-        }
-        
-        #button1990s {
+            #button1990s {
             background-color: blue;
         }
         
-        #button2000s {
+            #button2000s {
             background-color: green;
         }
         
-        #button2010s {
+            #button2010s {
             background-color: purple;
         }
         
-        #button2020s {
+            #button2020s {
             background-color: goldenrod;
         }
         
-        #button1990s:hover {
+            #button1990s:hover {
             background-color: mediumpurple;
         }
         
-        #button2000s:hover {
+            #button2000s:hover {
             background-color: mediumseagreen;
         }
         
-        #button2010s:hover {
+            #button2010s:hover {
             background-color: lightskyblue;
         }
         
-        #button2020s:hover {
+            #button2020s:hover {
             background-color: yellow;
             
         }
-    </style>
-</head>
-<body>
-    
-    <button id="button1990s">1990s</button>
-    <button id="button2000s">2000s</button>
-    <button id="button2010s">2010s</button>
-    <button id="button2020s">2020s</button>
-    <br>
+        </style>
+    </head>
+    <body>
+        <button id="button1990s">1990s</button>
+        <button id="button2000s">2000s</button>
+        <button id="button2010s">2010s</button>
+        <button id="button2020s">2020s</button>
+        <br>
 
-    <script type="text/javascript">
-        // Data
-        /* Data was collected and cleaned by me using information from goodreads.com
-         and The Publishers Weekly Best Selling Books of the United States*/
+        <script type="text/javascript">
+            //Data for Books by Best Selling Authors
+
+        //Data and Constants
+
         d3.csv("Yearly_Best_Sellers12.csv").then(data => {
             console.log("data", data)
 
-            // Format data
-            data.forEach(d => {
+        //Format Data
+        data.forEach(d => {
                 d.Genre = d.Genre;
                 d.CountTotal = +d.CountTotal;
                 d.Count90 = +d.Count90;
@@ -100,11 +77,37 @@
                 d.Count20 = +d.Count20;
             });
 
-            // Constants
-            const w = 6000;
-            const h = 6000;
-            const margin = 5;
-            
+    
+
+        const data1 = [
+            { author: "John Grisham", books: 32 },
+            { author: "Stephen King", books: 23 },
+            { author: "Danielle Steel", books: 22 },
+            { author: "James Patterson", books: 19 },
+            { author: "Nicolas Sparks", books: 12 },
+            { author: "Patricia Cornwell", books: 11 },
+            { author: "Jeff Kinney", books: 11 },
+            { author: "Tom Clancy", books: 10 },
+            { author: "Janet Evanovich", books: 10 },
+            { author: "Colleen Hoover", books: 10 }
+        ];
+
+//BAR CONSTANTS
+        const wbar = 600; // Width
+        const hbar = 600; // Height
+        const marginbar = 75; // Margin
+        const paddingbar = 1; //padding
+
+//SCATTER CONSTANTS
+
+        const wdot = 600;
+        const hdot = 600;
+        const margindot = 75;
+
+//PIE CONSTANTS
+        const w = 600;
+        const h = 600;
+        const margin = 5;
 
             // Color constants
             const myColor = d3.scaleOrdinal(["lightgrey", "lightblue", "rgb(177, 226, 152)", "rgb(151, 151, 210)", "lightseagreen", "red", "orange", "yellow", "purple", "gold", "blue", "Blue", "Pink", "Teal", "Green", "Indigo"]);
@@ -183,7 +186,7 @@
 // SVG for Legend
 const legend = svg.append("g")
     .attr("class", "legend")
-    .attr("transform", "translate(600,50)"); // Adjust position?
+    .attr("transform", "translate(00,00)"); // Adjust position?
 
 // Add Legend Items
 const legendItems = legend.selectAll(".legend-item")
@@ -273,67 +276,6 @@ const yAxis = d3.axisLeft()
                 .call(yAxis);
             
 
-        // Create circles for data points
-        svg.selectAll("circle")
-            .data(data)
-            .enter()
-            .append("circle")
-            .attr("cx", d => xScale(d.Length))
-            .attr("cy", d => yScale(d.Rating))
-            .attr("r", 3) // radius of circles
-            .attr("transform", "translate(60," + 650 + ")")
-            .attr("fill", "red");
-    
-            svg.append("text")
-                .attr("x", 285-(margin/2))
-                .attr("y", 1200)
-                .attr("font-size", "18px")
-                .attr("fill", "black")
-                .text("Number of Pages");
-
-            //y axis labels
-            svg.append("text")
-                .attr("x", -550)
-                .attr("y", 250-(margin/2))
-                .attr("font-size", "18px")
-                .attr("transform", "rotate(-90, 75, 300)")
-                .attr("fill", "black")
-                .text("Rating");
-
-                svg.append("text")
-                .attr("x", 280-(margin/2))
-                .attr("y", 650)
-                .attr("font-size", "18px")
-                //.attr("transform", "rotate(-90, 70, 300)")
-                .attr("class", "title")
-                .attr("fill", "rgb(116, 128, 110)")
-                .attr("fill", "black")
-                .text("Rating vs. Book Length");
-
-            
-        });
-      
-        //Data and Constants
-
-        const data1 = [
-            { author: "John Grisham", books: 32 },
-            { author: "Stephen King", books: 23 },
-            { author: "Danielle Steel", books: 22 },
-            { author: "James Patterson", books: 19 },
-            { author: "Nicolas Sparks", books: 12 },
-            { author: "Patricia Cornwell", books: 11 },
-            { author: "Jeff Kinney", books: 11 },
-            { author: "Tom Clancy", books: 10 },
-            { author: "Janet Evanovich", books: 10 },
-            { author: "Colleen Hoover", books: 10 }
-        ];
-
-
-        const wbar = 600; // Width
-        const hbar = 600; // Height
-        const marginbar = 75; // Margin
-        const paddingbar = 1; //padding
-
         //Scales
 
         const xScalebar = d3.scaleBand()
@@ -354,8 +296,8 @@ const yAxis = d3.axisLeft()
                       .attr("id", "barchart") // Assigning an ID to the SVG element
                       .attr("width", wbar)
                       .attr("height", hbar)
-                      .style("background-color", "rbg(153, 218, 204)")
-                      .attr("transform", "translate(800," + 800 + ")");
+                      .style("background-color", "rbg(153, 218, 204)");
+                      //.attr("transform", "translate(800," + 0 + ")");
 
         //Axes
 
@@ -417,9 +359,98 @@ const yAxis = d3.axisLeft()
                 //.attr("transform", "rotate(-90, 70, 300)")
                 .attr("fill", "black")
                 .text("Top 10 Authors by Appearance on Best Sellers List");
+//SCATTER
 
+        // Constants
+
+
+
+        // Data
+
+
+
+        const maxX = d3.max(data, d => d.Length);
+        const maxY = d3.max(data, d => d.Rating);
+
+        console.log("data", data);
+
+        // SVG
+        
+         const svgdot = d3.select("body")
+                       .append("svg")
+                       .attr("width", wdot)
+                       .attr("height", hdot);
+
+    //Axes
+    const xScaledot = d3.scaleLinear() 
+                                //.domain([0, maxX])
+                        .domain(d3.extent(data, d => d.Length))
+                        .range([margindot, wdot-margindot]);
+                                
+
+    const yScaledot = d3.scaleLinear()
+                               // .domain([0, maxY])
+                        .domain([3, d3.max(data, d => d.Rating)])
+                        .range([hdot-margindot, margindot]);
+
+    //bottom Axis
+    const bottomAxisdot = d3.axisBottom()
+                            .scale(xScaledot)
+                            .ticks(10);
+
+            svgdot.append("g")
+                  .attr("transform", "translate(0," + (hdot - margindot) + ")")
+                  .call(bottomAxisdot);
+
+    //Left Axis
+    const leftAxisdot = d3.axisLeft()
+                          .scale(yScaledot)
+                          .ticks(10);
+
+        svgdot.append("g")
+              .attr("transform", "translate(" + margindot + ", 0)")
+              .call(leftAxisdot);
+
+
+//Circles
+        svgdot.selectAll("circle")
+            .data(data)
+            .enter()
+            .append("circle")
+            .attr("cx", d => xScaledot(d.Length))
+            .attr("cy", d => yScaledot(d.Rating))
+            .attr("r", 3) // radius of circles
+            //.attr("transform", "translate(60," + 650 + ")")
+            .attr("fill", "red");
+    
+            svgdot.append("text")
+                .attr("x", 300-(margindot/2))
+                .attr("y", 595)
+                .attr("font-size", "18px")
+                .attr("fill", "black")
+                .text("Number of Pages");
+
+            //y axis labels
+            svgdot.append("text")
+                .attr("x", 0)
+                .attr("y", 300-(margindot/2))
+                .attr("font-size", "18px")
+                .attr("transform", "rotate(-90, 75, 300)")
+                .attr("fill", "black")
+                .text("Rating");
+
+            svgdot.append("text")
+                .attr("x", 280-(margindot/2))
+                .attr("y", 50)
+                .attr("font-size", "18px")
+                //.attr("transform", "rotate(-90, 70, 300)")
+                .attr("class", "title")
+                .attr("fill", "rgb(116, 128, 110)")
+                .attr("fill", "black")
+                .text("Rating vs. Book Length");
+        });
     
 
-    </script>
-</body>
+        </script>
+    </body>
 </html>
